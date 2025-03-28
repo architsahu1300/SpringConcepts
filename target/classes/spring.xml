@@ -1,0 +1,66 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+    <!--Need to specify complete class name -->
+<!--    <bean id="alien1" class="com.archit.Alien" scope="prototype"> </bean>-->
+    <!-- above and below lines mean the same thing only tags are collapsed due to empty body-->
+<!--    <bean id="alien1" class="com.archit.Alien" scope="prototype"/>-->
+
+<!--AUTOWIRING-->
+<!--    In below bean definition we can use byName/byType. byType will throw error if two implementations of Computer interface are present (com1 & com2)
+        Can be solved using primary keyword in bean tag.-->
+    <bean id="alien2" class="com.archit.Alien" autowire="byName">
+        <!-- Here we are giving ref of the laptop object already present in IoC container to be set in the Alien class member "lap" -->
+<!--        This works using setters-->
+<!--        <property name="lap" ref="laptop"></property>-->
+        <property name="age" value="24"></property>
+        <!-- property's value is set using setter for processor & values is used for primitive variables, for objects, ref is used -->
+
+
+<!--    Now we want Spring to use constructors to set values to the members. P.S. here the sequence matters according to the para constructor in Alien class    -->
+<!--        If we don't want to check the sequence we can define "type","index" of parameters inside constructor arg-->
+<!--        <constructor-arg value="24"></constructor-arg>-->
+<!--        <constructor-arg type="com.archit.Laptop" ref="laptop"></constructor-arg>-->
+        <!-- Giving ref of laptop bean created below so that we can use this in Alien class -->
+<!--        <property name="com" ref="com"></property>-->
+<!--    In above line if we write  <property name="com" ref="com"></property> and id for below laptop object is also "com",
+        it will work fine. But in order to work even after commenting above property tag, we need below autowire-->
+<!--        But if we want to connect this as such that in Alien class we need "com", below laptop object has id as "com",
+            we can write autowire="byName" in above bean definition and it will look for "com" here in spring.xml file while
+            looking for com object for Alien class-->
+    </bean>
+    <bean id="com" class="com.archit.Laptop"></bean>
+
+    <bean id="com1" class="com.archit.Laptop">
+        <property name="processor" value="macOS"></property>
+    </bean>
+
+<!--    PRIMARY-->
+<!--    If autowire is present byType, now it has confusion whether to take com1 or com2 and throws error
+        To solve this, primary="true" can be added in bean definition and in case of confusion, primary is taken-->
+<!--    If autowire is present for com1 and we explicitly mention ref to bean as com2, Spring takes com2 as it is explicitly mentioned by us-->
+    <bean id="com2" class="com.archit.Desktop" primary="true">
+    </bean>
+<!--    Above example is for autowiring, below is for usual scenario-->
+<!--    <bean id="laptop" class="com.archit.Laptop">-->
+<!--        <property name="processor" value="intel"></property>-->
+<!--    </bean>-->
+    <!-- similarly multiple definitions can be written -->
+
+<!--    LAZY-INIT bean-->
+<!--    Spring creates a bean for classes as soon as container is loaded.
+        If we want an object only when the getBean is called for the first time we can use lazy-init as below-->
+<!--    If a non-lazy bean is dependent on a lazy bean, the lazy bean will be created early as it is needed for the non-lazy bean-->
+<!--    Once a lazy bean is created it stays in the container as a singleton object-->
+    <bean id="com3" class="com.archit.Laptop" lazy-init="true">
+        <property name="processor" value="AMD Ryzen"></property>
+    </bean>
+
+<!--    INNER BEAN-->
+<!--    If we want that com3 object should only be used for Alien bean, we can define above definition inside <property> tag of Alien bean definition-->
+
+</beans>
+
