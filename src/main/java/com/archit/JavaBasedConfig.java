@@ -10,7 +10,7 @@ public class JavaBasedConfig {
         //Earlier we were using xml file now we will have a java class file which will contain the required config for Spring
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         Alien obj =  context.getBean(Alien.class);
-//        System.out.println(dt);
+//       System.out.println(dt);
         //obj.coding() will give error here because coding requires Computer type member of Alien class to work
         //We have to give reference of Computer type object in AppConfig.java while defining Alien bean
         obj.coding();
